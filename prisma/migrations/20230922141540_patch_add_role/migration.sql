@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `KehadiranPiket` ADD COLUMN `keterangan` LONGTEXT NULL,
+    ADD COLUMN `ponselPelapaor` VARCHAR(191) NULL;
+
+-- AlterTable
+ALTER TABLE `PesertaDidik` ADD COLUMN `role` ENUM('OPERATOR_KELAS', 'ADMINISTRATOR', 'NORMAL') NOT NULL DEFAULT 'NORMAL';
