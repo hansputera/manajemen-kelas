@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum RolePd {
+  OPERATOR_KELAS
+  ADMINISTRATOR
+  NORMAL
+}
+
+model Kelas {
+  id               String  @id
+  kelas            String
+  whatsappGroupJid String?
+
+  anggota        PesertaDidik[]
+  jadwalPiket    JadwalPiket[]
+  kehadiranPiket KehadiranPiket[]
+
+  dendaPiket BigInt @default(5000)
+}
+
+model PesertaDidik {
+  id        String  @id
+  rombel    String
+  hariPiket String?
+
+  nama           String
+  nisn           String?
+  kelas          Kelas            @relation(fields: [rombel], references: [id])
+  piket          JadwalPiket?     @relation(fields: [hariPiket], references: [hari])
+  role           RolePd           @default(NORMAL)
+  kehadiranPiket KehadiranPiket[]
+  ponsel         String?
+  agama          String
+  gender         String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KehadiranPiket {
+  id      Int    @id @default(autoincrement())
+  rombel  String
+  idSiswa String
+
+  proofPhoto     String // bukti piket
+  ponselPelapaor String?
+  keterangan     String? @db.LongText
+
+  kelas Kelas        @relation(fields: [rombel], references: [id])
+  siswa PesertaDidik @relation(fields: [idSiswa], references: [id])
+
+  waktu DateTime @default(now())
+}
+
+model JadwalPiket {
+  id     Int    @id @default(autoincrement())
+  rombel String
+
+  hari    String         @unique
+  anggota PesertaDidik[]
+
+  Kelas Kelas @relation(fields: [rombel], references: [id])
+}
