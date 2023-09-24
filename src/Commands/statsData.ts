@@ -8,6 +8,6 @@ export const statsDataCommand = (bot: Client) => {
 			prisma.kelas.count(),
 		]);
 
-		await ctx.reply(`*Jumlah tarikan data:*\nJumlah Siswa/i terdaftar: ${jumlahPd} siswa/i\nJumlah Kelas: ${jumlahKelas}\n*Resource server:*\nMemory usage: ${process.memoryUsage().heapUsed} bytes`);
+		await ctx.reply(`*Jumlah tarikan data:*\nJumlah Siswa/i terdaftar: ${jumlahPd} siswa/i\nJumlah Kelas: ${jumlahKelas}`);
 	});
 };

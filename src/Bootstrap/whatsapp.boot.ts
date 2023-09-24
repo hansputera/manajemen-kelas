@@ -1,3 +1,4 @@
+import {setRoleCommand} from '@/Commands/setRole';
 import {showMyDataCommand} from '@/Commands/showMyData';
 import {statsDataCommand} from '@/Commands/statsData';
 import {consola} from 'consola';
@@ -5,7 +6,7 @@ import {Client, SessionManager} from 'gampang';
 import * as path from 'path';
 
 async function bootWhatsappBot() {
-	consola.info('Booting whatsapp bot');
+	consola.warn('Booting whatsapp bot');
 	const session = new SessionManager(path.resolve(__dirname, '..', 'assets', 'sessions'), 'folder');
 	const client = new Client(session, {
 		qr: {
@@ -23,6 +24,7 @@ async function bootWhatsappBot() {
 
 	showMyDataCommand(client);
 	statsDataCommand(client);
+	setRoleCommand(client);
 
 	await client.launch();
 }
