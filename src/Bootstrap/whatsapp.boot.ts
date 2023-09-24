@@ -1,3 +1,4 @@
+import {registerGroupCommand} from '@/Commands/registerGroup';
 import {setRoleCommand} from '@/Commands/setRole';
 import {showMyDataCommand} from '@/Commands/showMyData';
 import {statsDataCommand} from '@/Commands/statsData';
@@ -25,6 +26,7 @@ async function bootWhatsappBot() {
 	showMyDataCommand(client);
 	statsDataCommand(client);
 	setRoleCommand(client);
+	registerGroupCommand(client);
 
 	await client.launch();
 }
