@@ -1,4 +1,5 @@
 import {retrievePdDapodik} from '@/Utilities/dapodik';
+import {toZeroEightNumber} from '@/Utilities/toZeroEightNumber';
 import {prisma} from '@/prisma';
 import {RolePd} from '@prisma/client';
 import {consola} from 'consola';
@@ -16,7 +17,7 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 			id: pd.peserta_didik_id,
 			nama: pd.nama,
 			nisn: pd.nisn,
-			ponsel: pd.nomor_telepon_seluler,
+			ponsel: pd.nomor_telepon_seluler?.length ? toZeroEightNumber(pd.nomor_telepon_seluler) : undefined,
 			kelas: {
 				connectOrCreate: {
 					where: {
