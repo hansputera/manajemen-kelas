@@ -109,7 +109,7 @@ export const registerGroupCommand = (bot: Client) => {
 					id: kelas.id,
 				},
 				data: {
-					whatsappGroupJid: ctx.getCurrentJid(),
+					whatsappGroupJid: ctx.raw.key.remoteJid,
 				},
 			});
 
