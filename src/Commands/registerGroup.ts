@@ -36,6 +36,72 @@ export const registerGroupCommand = (bot: Client) => {
 						return;
 					}
 				}
+			} else if (pd.role === RolePd.OPERATOR_KELAS) {
+				if (kelas.whatsappGroupJid?.length) {
+					await ctx.reply('Mohon maaf, operator kelas tidak dapat mengubah grup yang telah terdaftar. Silahkan hubungi Administrator untuk mengganti');
+					return;
+				}
+
+				const confirmMessage = await ctx.reply('Kamu selaku operator kelas hanya berhak mengubah dan meregistrasikan grup ini sekali saja, dan tidak dapat dirubah kembali. Apakah kamu yakin untuk mendaftarkan grup ini untuk kelas *' + kelas.kelas + '* ?\nBalas pesan ini dengan *ya* atau *tidak*');
+				const yesOrNoFunc = (input: string) => {
+					if (/((i)?y(es|a|o)?)/gi.test(input)) {
+						return 'y';
+					}
+
+					if (/(n(o(pe)?|ah)?|tidak|ndak|ga|ogah)/gi.test(input)) {
+						return 'n';
+					}
+
+					return undefined;
+				};
+
+				const confirmationCol = new MessageCollector(ctx, {
+					max: 1,
+					time: 30_000,
+					validation(ctx) {
+						return Boolean(yesOrNoFunc(ctx.text.trim()));
+					},
+				});
+
+				confirmationCol.start();
+				await confirmationCol.wait();
+
+				if (!confirmationCol.contexts.length) {
+					await ctx.client.raw?.relayMessage(ctx.raw.key.remoteJid!, {
+						editedMessage: {
+							message: {
+								protocolMessage: {
+									key: confirmMessage?.raw.key,
+									type: 14,
+									editedMessage: {
+										conversation: 'Wah sepertinya waktu konfirmasimu sudah habis, coba lain kali ya',
+									},
+								},
+							},
+						},
+					}, {});
+					return;
+				}
+
+				const confirmBool = yesOrNoFunc(confirmationCol.contexts[0].text.trim());
+				if (confirmBool === 'n') {
+					await ctx.client.raw?.relayMessage(ctx.raw.key.remoteJid!, {
+						editedMessage: {
+							message: {
+								protocolMessage: {
+									key: confirmMessage?.raw.key,
+									type: 14,
+									editedMessage: {
+										conversation: 'Konfirmasi telah ditolak',
+									},
+								},
+							},
+						},
+					}, {});
+					return;
+				}
+
+				await confirmMessage?.delete();
 			}
 
 			const changeResult = await prisma.kelas.update({
