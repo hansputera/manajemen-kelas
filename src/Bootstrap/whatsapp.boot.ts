@@ -2,6 +2,7 @@ import {registerGroupCommand} from '@/Commands/registerGroup';
 import {setRoleCommand} from '@/Commands/setRole';
 import {showMyDataCommand} from '@/Commands/showMyData';
 import {statsDataCommand} from '@/Commands/statsData';
+import {uploadPiketCommand} from '@/Commands/uploadPiket';
 import {consola} from 'consola';
 import {Client, SessionManager} from 'gampang';
 import * as path from 'path';
@@ -27,6 +28,7 @@ async function bootWhatsappBot() {
 	statsDataCommand(client);
 	setRoleCommand(client);
 	registerGroupCommand(client);
+	uploadPiketCommand(client);
 
 	await client.launch();
 }
