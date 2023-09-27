@@ -52,6 +52,7 @@ model KehadiranPiket {
   proofPhoto     String // bukti piket
   ponselPelapaor String?
   keterangan     String? @db.LongText
+  messageId      String
 
   kelas Kelas        @relation(fields: [rombel], references: [id])
   siswa PesertaDidik @relation(fields: [idSiswa], references: [id])
