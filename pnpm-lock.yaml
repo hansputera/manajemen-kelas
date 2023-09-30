@@ -24,8 +24,8 @@ dependencies:
     specifier: ^16.3.1
     version: 16.3.1
   gampang:
-    specifier: ^2.1.8
-    version: 2.1.8
+    specifier: ^2.2.0
+    version: 2.2.0
   hono:
     specifier: ^3.7.2
     version: 3.7.2
@@ -41,8 +41,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: ^20.7.2
-    version: 20.7.2
+    specifier: ^20.8.0
+    version: 20.8.0
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.7.3
     version: 6.7.3(@typescript-eslint/parser@6.7.3)(eslint@8.50.0)(typescript@5.2.2)
@@ -469,6 +469,18 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: false
 
+  /@sapphire/lexure@1.1.5:
+    resolution: {integrity: sha512-afVTCLHezlyvdvvOcEeCzMA05l1yje9axtY7gWQpDcppOazskYPgGMVCdAbfHz5BsyABMZYT2MznY+phEgFc8Q==}
+    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+    dependencies:
+      '@sapphire/result': 2.6.4
+    dev: false
+
+  /@sapphire/result@2.6.4:
+    resolution: {integrity: sha512-o6rAnNbtumhR4Iy9t1p3xtOG9WtfO2OyyyaBrGUNThmhqf1cwvl5CO3/E0Hd66qdkuSqpJqC9TnnGzTmSoDd6A==}
+    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+    dev: false
+
   /@thi.ng/bitstream@2.2.28:
     resolution: {integrity: sha512-aW7cSEaf680nfCIW42C/Hur12Toy8ST3XLRM8OxHXHZySq9cPrJ5stm+uilHlp+L00yBvgAoKk6ZWkDQ8mtYbA==}
     engines: {node: '>=12.7'}
@@ -497,8 +509,8 @@ packages:
     resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
     dev: false
 
-  /@types/node@20.7.2:
-    resolution: {integrity: sha512-RcdC3hOBOauLP+r/kRt27NrByYtDjsXyAuSbR87O6xpsvi763WI+5fbSIvYJrXnt9w4RuxhV6eAXfIs7aaf/FQ==}
+  /@types/node@20.8.0:
+    resolution: {integrity: sha512-LzcWltT83s1bthcvjBmiBvGJiiUe84NWRHkw+ZV6Fr41z2FbIzvc815dk2nQ3RAKMuN2fkenM/z3Xv2QzEpYxQ==}
 
   /@types/semver@7.5.3:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
@@ -1348,12 +1360,13 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /gampang@2.1.8:
-    resolution: {integrity: sha512-MmOqwMoQVYjL3ztHmVnxFYLEV8cafH+TM2wWEuXPcLgdEXl+LGY9Dm5HfBB20IWDQkhMoHg9obYo0fgIFJWBow==}
+  /gampang@2.2.0:
+    resolution: {integrity: sha512-jWDlHHBYBFudj/1XCmaDO3NLYYcCcmq04935dWY08hJhmlehhBIr/Xkhuwk6nb8ES8vKmAZc2bvz746x7cL3gQ==}
     engines: {node: '>=12.x'}
     dependencies:
       '@adiwajshing/baileys': /@whiskeysockets/baileys@6.5.0
       '@adiwajshing/keyed-db': 0.2.4
+      '@sapphire/lexure': 1.1.5
       long: 5.2.3
       pino: 8.15.1
       pino-pretty: 9.4.1
@@ -2039,7 +2052,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 20.7.2
+      '@types/node': 20.8.0
       long: 4.0.0
     dev: false
 

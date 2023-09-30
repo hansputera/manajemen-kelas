@@ -1,10 +1,12 @@
-import {cariSiswaCommand} from '@/Commands/cariSiswa';
-import {piketCommand} from '@/Commands/piket';
-import {registerGroupCommand} from '@/Commands/registerGroup';
-import {setRoleCommand} from '@/Commands/setRole';
-import {showMyDataCommand} from '@/Commands/showMyData';
-import {statsDataCommand} from '@/Commands/statsData';
-import {uploadPiketCommand} from '@/Commands/uploadPiket';
+import {cariSiswaCommand} from '@/Commands/Administrator/cariSiswa';
+import {piketCommand} from '@/Commands/Normal/piket';
+import {registerGroupCommand} from '@/Commands/Operator/registerGroup';
+import {setRoleCommand} from '@/Commands/Administrator/setRole';
+import {showMyDataCommand} from '@/Commands/Normal/showMyData';
+import {statsDataCommand} from '@/Commands/Normal/statsData';
+import {uploadPiketCommand} from '@/Commands/Operator/uploadPiket';
+import {registerSiswaCommand} from '@/Commands/Administrator/registerSiswa';
+
 import {consola} from 'consola';
 import {Client, SessionManager} from 'gampang';
 import * as path from 'path';
@@ -33,6 +35,7 @@ async function bootWhatsappBot() {
 	uploadPiketCommand(client);
 	piketCommand(client);
 	cariSiswaCommand(client);
+	registerSiswaCommand(client);
 
 	await client.launch();
 }

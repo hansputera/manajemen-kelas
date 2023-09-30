@@ -4,14 +4,15 @@ import {type Client} from 'gampang';
 
 export const showMyDataCommand = (bot: Client) => {
 	bot.command('me', async ctx => {
+		const m = await ctx.reply('Mohon tunggu!');
 		const pd = await prisma.pesertaDidik.findFirst({where: {ponsel: toZeroEightNumber(ctx.authorNumber)}, include: {kelas: true}});
 
 		if (!pd) {
-			await ctx.reply('Ups, nomormu saat ini belum terdaftar dengan data periodik di Dapodik');
+			await m?.edit('Ups, nomormu saat ini belum terdaftar dengan data periodik di Dapodik');
 			return;
 		}
 
-		await ctx.reply(`Data terbaru pada ${pd.updatedAt.toLocaleDateString('id-ID', {
+		await m?.edit(`Data terbaru pada ${pd.updatedAt.toLocaleDateString('id-ID', {
 			day: '2-digit',
 			month: 'long',
 			year: 'numeric',

@@ -40,6 +40,8 @@ model PesertaDidik {
   agama          String
   gender         String
 
+  passwordAuth String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -49,10 +51,10 @@ model KehadiranPiket {
   rombel  String
   idSiswa String
 
-  proofPhoto     String // bukti piket
-  ponselPelapaor String?
-  keterangan     String? @db.LongText
-  messageId      String
+  proofPhoto    String // bukti piket
+  ponselPelapor String?
+  keterangan    String? @db.LongText
+  messageId     String
 
   kelas Kelas        @relation(fields: [rombel], references: [id])
   siswa PesertaDidik @relation(fields: [idSiswa], references: [id])

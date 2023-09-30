@@ -11,14 +11,14 @@ export const registerGroupCommand = (bot: Client) => {
 			if (pd.role === RolePd.ADMINISTRATOR) {
 				const kelasInput = ctx.args.at(0);
 				if (!kelasInput?.length) {
-					await ctx.reply('Mohon masukan kelas:');
+					const message = await ctx.reply('Mohon masukan kelas:');
 					const m = new MessageCollector(ctx, {
 						max: 1,
 						time: 10_000,
 						async validation(ctx) {
 							const kelasOut = await prisma.kelas.findFirst({where: {kelas: ctx.text.trim().toUpperCase()}});
 							if (!kelasOut) {
-								await ctx.reply('Kelas tidak terdaftar, coba ulangi kembali');
+								await message?.edit('Kelas tidak terdaftar, coba ulangi kembali');
 							}
 
 							if (kelasOut) {
@@ -32,7 +32,7 @@ export const registerGroupCommand = (bot: Client) => {
 					m.start();
 					await m.wait();
 					if (!m.contexts.length) {
-						await ctx.reply('Ups, waktu menginput kelas sudah habis. Coba dilain waktu ya!');
+						await message?.edit('Ups, waktu menginput kelas sudah habis. Coba dilain waktu ya!');
 						return;
 					}
 				}
@@ -67,41 +67,17 @@ export const registerGroupCommand = (bot: Client) => {
 				await confirmationCol.wait();
 
 				if (!confirmationCol.contexts.length) {
-					await ctx.client.raw?.relayMessage(ctx.raw.key.remoteJid!, {
-						editedMessage: {
-							message: {
-								protocolMessage: {
-									key: confirmMessage?.raw.key,
-									type: 14,
-									editedMessage: {
-										conversation: 'Wah sepertinya waktu konfirmasimu sudah habis, coba lain kali ya',
-									},
-								},
-							},
-						},
-					}, {});
+					await confirmMessage?.edit('Wah sepertinya waktu konfirmasimu sudah habis, coba lain kali ya');
 					return;
 				}
 
 				const confirmBool = yesOrNoFunc(confirmationCol.contexts[0].text.trim());
 				if (confirmBool === 'n') {
-					await ctx.client.raw?.relayMessage(ctx.raw.key.remoteJid!, {
-						editedMessage: {
-							message: {
-								protocolMessage: {
-									key: confirmMessage?.raw.key,
-									type: 14,
-									editedMessage: {
-										conversation: 'Konfirmasi telah ditolak',
-									},
-								},
-							},
-						},
-					}, {});
+					await confirmMessage?.edit('Konfirmasi telah ditolak');
 					return;
 				}
 
-				await confirmMessage?.delete();
+				await confirmMessage?.edit('Anda memilih')
 			}
 
 			const changeResult = await prisma.kelas.update({

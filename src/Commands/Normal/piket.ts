@@ -5,6 +5,8 @@ import {type Client} from 'gampang';
 
 export const piketCommand = (client: Client) => {
 	client.command('piket', async ctx => {
+		const m = await ctx.reply('Mohon tunggu!');
+
 		const pd = await prisma.pesertaDidik.findFirst({
 			where: {
 				ponsel: toZeroEightNumber(ctx.authorNumber),
@@ -19,15 +21,15 @@ export const piketCommand = (client: Client) => {
 		});
 
 		if (!pd) {
-			await ctx.reply('Nomormu belum terdaftar di Dapodik saat ini, silahkan hubungi Administrator');
+			await m?.edit('Nomormu belum terdaftar di Dapodik saat ini, silahkan hubungi Administrator');
 			return;
 		}
 
 		if (!pd.hariPiket) {
-			await ctx.reply(`Kamu kelas *${pd.kelas.kelas}* ya? Sepertinya jadwal piket kelasmu belum diatur, silahkan hubungi perangkat kelas atau ketua kelasmu ya`);
+			await m?.edit(`Kamu kelas *${pd.kelas.kelas}* ya? Sepertinya jadwal piket kelasmu belum diatur, silahkan hubungi perangkat kelas atau ketua kelasmu ya`);
 			return;
 		}
 
-		await ctx.reply(`Kamu kelas *${pd.kelas.kelas}* dengan nama *${pd.nama}* piket pada hari _${toCapitalCase(pd.hariPiket)}_`);
+		await m?.edit(`Kamu kelas *${pd.kelas.kelas}* dengan nama *${pd.nama}* piket pada hari _${toCapitalCase(pd.hariPiket)}_`);
 	});
 };

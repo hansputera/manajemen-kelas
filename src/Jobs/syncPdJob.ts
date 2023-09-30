@@ -34,6 +34,7 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 			gender: pd.jenis_kelamin,
 		},
 		update: {
+			id: pd.peserta_didik_id,
 			nama: pd.nama.replace(/\./g, ''),
 			nisn: pd.nisn,
 			ponsel: pd.nomor_telepon_seluler,
@@ -54,6 +55,10 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 		},
 		where: {
 			id: pd.peserta_didik_id,
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			OR: [{
+				nisn: pd.nisn,
+			}],
 		},
 		include: {
 			kelas: true,
