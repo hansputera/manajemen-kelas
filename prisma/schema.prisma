@@ -13,6 +13,13 @@ enum RolePd {
   NORMAL
 }
 
+enum TipePresensi {
+  IZIN
+  SAKIT
+  ALPHA
+  HADIR
+}
+
 model Kelas {
   id               String  @id
   kelas            String
@@ -21,6 +28,7 @@ model Kelas {
   anggota        PesertaDidik[]
   jadwalPiket    JadwalPiket[]
   kehadiranPiket KehadiranPiket[]
+  presensi       Presensi[]
 
   dendaPiket BigInt @default(5000)
 }
@@ -34,6 +42,7 @@ model PesertaDidik {
   nisn           String?
   kelas          Kelas            @relation(fields: [rombel], references: [id])
   piket          JadwalPiket?     @relation(fields: [hariPiket], references: [hari])
+  presensi       Presensi[]
   role           RolePd           @default(NORMAL)
   kehadiranPiket KehadiranPiket[]
   ponsel         String?
@@ -44,6 +53,18 @@ model PesertaDidik {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Presensi {
+  id      Int    @id @default(autoincrement())
+  rombel  String
+  idSiswa String
+
+  kelas Kelas        @relation(fields: [rombel], references: [id])
+  siswa PesertaDidik @relation(fields: [idSiswa], references: [id])
+
+  tipe      TipePresensi @default(HADIR)
+  createdAt DateTime     @default(now())
 }
 
 model KehadiranPiket {
