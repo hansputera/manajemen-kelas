@@ -1,3 +1,5 @@
+import {cariSiswaCommand} from '@/Commands/cariSiswa';
+import {piketCommand} from '@/Commands/piket';
 import {registerGroupCommand} from '@/Commands/registerGroup';
 import {setRoleCommand} from '@/Commands/setRole';
 import {showMyDataCommand} from '@/Commands/showMyData';
@@ -29,6 +31,8 @@ async function bootWhatsappBot() {
 	setRoleCommand(client);
 	registerGroupCommand(client);
 	uploadPiketCommand(client);
+	piketCommand(client);
+	cariSiswaCommand(client);
 
 	await client.launch();
 }

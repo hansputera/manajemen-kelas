@@ -15,17 +15,17 @@ export const processPiketExcelFile = async (excelFile: string | Buffer, kelas: s
 		return undefined;
 	}
 
-	const names = payloads.slice(3).map(n => n[1]);
+	const names = payloads.slice(1).map(n => n[1]);
 	const siswa = await prisma.$transaction(
 		// eslint-disable-next-line @typescript-eslint/promise-function-async
 		names.map(n => prisma.pesertaDidik.findFirst({
 			where: {
 				nama: {
-					contains: n,
+					contains: n.replace(/\./g, ''),
 				},
 				kelas: {
 					kelas: {
-						equals: kelas,
+						contains: kelas,
 					},
 				},
 			},
@@ -57,8 +57,13 @@ export const processPiketExcelFile = async (excelFile: string | Buffer, kelas: s
 		})),
 	);
 
+	const notFoundNameListPoses = siswa.map((x, i) => x ? undefined : names[i])
+		.filter(n => typeof n !== 'undefined');
+
 	return {
 		success: resultsChange.filter(s => s.status === 'fulfilled').length,
 		fails: resultsChange.filter(s => s.status === 'rejected').length,
+		notFoundNameList: notFoundNameListPoses.map((x, i) => `${i + 1}. ${x}`),
+		failNameList: resultsChange.filter(x => x.status === 'rejected').map((_, i) => `${i + 1}. ${siswa[i]?.nama ?? names[i]}`),
 	};
 };

@@ -15,7 +15,7 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 	const results = await Promise.all(pds.map(async pd => prisma.pesertaDidik.upsert({
 		create: {
 			id: pd.peserta_didik_id,
-			nama: pd.nama,
+			nama: pd.nama.replace(/\./g, ''),
 			nisn: pd.nisn,
 			ponsel: pd.nomor_telepon_seluler?.length ? toZeroEightNumber(pd.nomor_telepon_seluler) : undefined,
 			kelas: {
@@ -34,7 +34,7 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 			gender: pd.jenis_kelamin,
 		},
 		update: {
-			nama: pd.nama,
+			nama: pd.nama.replace(/\./g, ''),
 			nisn: pd.nisn,
 			ponsel: pd.nomor_telepon_seluler,
 			kelas: {

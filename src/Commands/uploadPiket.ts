@@ -23,15 +23,15 @@ export const uploadPiketCommand = (bot: Client) => {
 
 			const piketFileBuf = await document.retrieveFile('document');
 			const processResults = await processPiketExcelFile(piketFileBuf, pd.kelas.kelas);
-			if (!processPiketExcelFile) {
+			if (!processResults) {
 				await ctx.reply('Proses validasi terhadap file gagal, mohon berikan format file yang valid!');
 				return;
 			}
 
-			const piketFilePath = path.resolve(__dirname, '..', 'assets', 'pikets', pd.kelas.id.concat(document.raw.fileName.split('.').at(-1)!));
+			const piketFilePath = path.resolve(__dirname, '..', 'assets', 'pikets', pd.kelas.id.concat('.', document.raw.fileName.split('.').at(-1)!));
 
 			await writeFile(piketFilePath, piketFileBuf);
-			await ctx.reply(`File piket anda telah terupload dengan ukuran ${prettyBytes(piketFileBuf.byteLength)} serta telah terimport dengan ${processResults?.success} data sukses, dan ${processResults?.fails} data gagal.`);
+			await ctx.reply(`File piket anda telah terupload dengan ukuran ${prettyBytes(piketFileBuf.byteLength)} serta telah terimport dengan ${processResults.success} data sukses, dan ${processResults.fails} data gagal.\n\nNama-nama siswa yang tidak ditemukan:\n${processResults.notFoundNameList.length ? processResults.notFoundNameList.join('\n') : '-'}\n\nNama siswa yang gagal terimport:\n${processResults.failNameList.length ? processResults.failNameList.join('\n') : '-'}`);
 		}
 	});
 };
