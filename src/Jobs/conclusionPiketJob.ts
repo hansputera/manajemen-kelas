@@ -6,11 +6,16 @@ import {Cron as cron} from 'croner';
 export type GroupedData = {
 	kelas: string;
 	members: string[];
+	hari: string;
+	denda: number;
 	waJid?: string;
 };
 
 export const conclusionPiketJob = cron('0 14 * * *', async () => {
 	const currentDate = new Date();
+	const currDay = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'][
+		currentDate.getDay() - 1
+	];
 
 	const kehadiranPiketToday = await prisma.kehadiranPiket.findMany({
 		where: {
@@ -40,7 +45,7 @@ export const conclusionPiketJob = cron('0 14 * * *', async () => {
 			if (existingGroup) {
 				existingGroup.members.push(a.siswa.nama);
 			} else {
-				result.push({kelas: a.kelas.kelas, members: [a.siswa.nama], waJid: a.kelas.whatsappGroupJid ?? undefined});
+				result.push({denda: Number(a.kelas.dendaPiket), hari: currDay, kelas: a.kelas.kelas, members: [a.siswa.nama], waJid: a.kelas.whatsappGroupJid ?? undefined});
 			}
 
 			return result;
