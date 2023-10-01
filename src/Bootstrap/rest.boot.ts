@@ -4,6 +4,7 @@ import {logger} from 'hono/logger';
 import {jwt} from 'hono/jwt';
 import {cors} from 'hono/cors';
 import {consola} from 'consola';
+import {serveStatic} from '@hono/node-server/serve-static';
 
 import {projectConfig} from '@/config';
 import {createTokenValidation} from '@/Rest/Validators/createToken';
@@ -21,6 +22,9 @@ async function bootRest() {
 
 	app.use('*', logger(consola.info));
 	app.use('*', cors());
+	app.use('/assets/images/*', serveStatic({
+		root: './assets/images',
+	}));
 
 	app.get(`/${randomQrRoute}`, showQrController);
 	app.use('/api/*', jwt({
