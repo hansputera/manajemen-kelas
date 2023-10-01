@@ -28,7 +28,7 @@ async function bootWhatsappBot() {
 				dest: path.resolve(__dirname, '..', 'assets', 'qr.png'),
 			},
 		},
-		prefixes: ['s!'],
+		prefixes: ['s!', '.'],
 	});
 
 	client.on('ready', () => {

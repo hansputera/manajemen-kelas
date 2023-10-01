@@ -27,7 +27,7 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		},
 	});
 
-	if (!pd) {
+	if (!pd?.kelas.whatsappGroupJid) {
 		return;
 	}
 
