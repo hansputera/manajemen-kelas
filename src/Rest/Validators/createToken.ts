@@ -23,11 +23,23 @@ export const createTokenValidation = validator('json', async (value, ctx) => {
 				passwordAuth: parsed.data.password,
 			},
 		},
+		include: {
+			kelas: {
+				select: {
+					kelas: true,
+				},
+			},
+		},
 	});
 
 	if (!pd) {
 		return ctx.text('pd not found', 401);
 	}
 
-	return parsed.data;
+	return {
+		id: pd.id,
+		nama: pd.nama,
+		role: pd.role,
+		kelas: pd.kelas.kelas,
+	};
 });
