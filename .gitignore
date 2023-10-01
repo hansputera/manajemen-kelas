@@ -3,3 +3,4 @@ dist
 .env
 assets/sessions
 assets/pikets/*.xlsx
+assets/pikets/*.x
