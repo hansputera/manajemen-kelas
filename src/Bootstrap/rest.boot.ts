@@ -10,6 +10,7 @@ import {createTokenValidation} from '@/Rest/Validators/createToken';
 import {createTokenController} from '@/Rest/Controllers/createToken';
 import {randomUUID} from 'crypto';
 import {showQrController} from '@/Rest/Controllers/showQr';
+import {RolePd} from '@prisma/client';
 
 async function bootRest() {
 	consola.warn('Booting web rest');
@@ -25,6 +26,13 @@ async function bootRest() {
 	app.use('/api/*', jwt({
 		secret: projectConfig.JWT_SECRET,
 	}));
+	app.use('/api/operator/*', async (ctx, next) => {
+		if (!(Reflect.get(ctx.get('jwtPayload'), 'role') in [RolePd.ADMINISTRATOR, RolePd.OPERATOR_KELAS])) {
+			return ctx.json({error: 'Permission denied'}, 403);
+		}
+
+		return next();
+	});
 
 	app.post('/token', createTokenValidation, createTokenController);
 	app.get('/', ctx => ctx.text('Manajemen Kelas v0.1'));
