@@ -5,6 +5,7 @@ import {z} from 'zod';
 const createTokenSchema = z.object({
 	pdId: z.string().min(10).max(255),
 	nama: z.string(),
+	password: z.string(),
 });
 
 export const createTokenValidation = validator('json', async (value, ctx) => {
@@ -19,6 +20,7 @@ export const createTokenValidation = validator('json', async (value, ctx) => {
 			// eslint-disable-next-line @typescript-eslint/naming-convention
 			AND: {
 				nama: parsed.data.nama,
+				passwordAuth: parsed.data.password,
 			},
 		},
 	});
