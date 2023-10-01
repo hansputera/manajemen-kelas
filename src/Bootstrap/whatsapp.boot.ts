@@ -11,6 +11,8 @@ import {consola} from 'consola';
 import {Client, SessionManager} from 'gampang';
 import * as path from 'path';
 
+import {incomingMessage} from '@/Events/incomeMessage';
+
 async function bootWhatsappBot() {
 	consola.warn('Booting whatsapp bot');
 	const session = new SessionManager(path.resolve(__dirname, '..', 'assets', 'sessions'), 'folder');
@@ -36,6 +38,8 @@ async function bootWhatsappBot() {
 	piketCommand(client);
 	cariSiswaCommand(client);
 	registerSiswaCommand(client);
+
+	incomingMessage(client);
 
 	await client.launch();
 }
