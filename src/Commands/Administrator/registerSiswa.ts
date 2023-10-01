@@ -23,6 +23,19 @@ export const registerSiswaCommand = (bot: Client) => {
 			const ponsel = ctx.args.at(4)!;
 			const gender = ctx.args.at(5)!;
 
+			const pd = await prisma.pesertaDidik.findFirst({
+				where: {
+					nisn: {
+						equals: nisnInput,
+					},
+				},
+			});
+
+			if (pd) {
+				await tempMessage?.edit('NISN yang kamu masukan telah ter-registrasi dengan peserta didik lain dengan atas nama ' + pd.nama);
+				return;
+			}
+
 			const kelasOnDb = await prisma.kelas.findFirst({
 				where: {
 					kelas,
@@ -46,24 +59,12 @@ export const registerSiswaCommand = (bot: Client) => {
 				return;
 			}
 
-			let pd = await prisma.pesertaDidik.findFirst({
-				where: {
-					nisn: {
-						equals: nisnInput,
-					},
-				},
-			});
-
-			if (pd) {
-				await tempMessage?.edit('NISN yang kamu masukan telah ter-registrasi dengan peserta didik lain dengan atas nama ' + pd.nama);
-				return;
-			}
-
-			pd = await prisma.pesertaDidik.create({
+			const pdC = await prisma.pesertaDidik.create({
 				data: {
 					agama,
 					ponsel: toZeroEightNumber(ponsel),
 					gender,
+					nisn: nisnInput,
 					id: randomUUID(),
 					kelas: {
 						connect: {
@@ -77,7 +78,7 @@ export const registerSiswaCommand = (bot: Client) => {
 				},
 			});
 
-			await tempMessage?.edit(`*${pd.nama}* telah terdaftar dengan NISN *${pd.nisn}*`);
+			await tempMessage?.edit(`*${pdC.nama}* telah terdaftar dengan NISN *${pdC.nisn}*`);
 		}
 	}, {
 		aliases: ['registersiswa'],

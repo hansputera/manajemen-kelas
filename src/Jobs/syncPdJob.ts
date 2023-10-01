@@ -6,7 +6,10 @@ import {consola} from 'consola';
 import {Cron as cron} from 'croner';
 
 export const syncPdJob = cron('0 0 * * *', async () => {
-	const pds = await retrievePdDapodik().catch(() => undefined);
+	const pds = await retrievePdDapodik().catch((e: Error) => {
+		consola.error('[syncPdJob.retrievePdDapodik]: %s', e.message);
+		return undefined;
+	});
 	if (!pds) {
 		consola.error('[syncPdJob]: fail to retrieve peserta didik from Dapodik');
 		return;
