@@ -1,14 +1,9 @@
+import {compareTodayDate} from '@/Utilities/compareTodayDate';
 import {toZeroEightNumber} from '@/Utilities/toZeroEightNumber';
 import {prisma} from '@/prisma';
 import {writeFile} from 'fs/promises';
 import {type Context} from 'gampang';
 import path from 'path';
-
-const timeCompareFunc = (compareDate: Date): boolean => {
-	const currentDate = new Date();
-
-	return compareDate <= currentDate && compareDate >= new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-};
 
 export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) => {
 	const piketProofImage = ctx.image ?? ctx.getReply()?.image;
@@ -52,7 +47,7 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 			return;
 		}
 
-		const kehadiranToday = reportPd.kehadiranPiket.filter(x => timeCompareFunc(x.waktu));
+		const kehadiranToday = reportPd.kehadiranPiket.filter(x => compareTodayDate(x.waktu));
 		if (kehadiranToday.length) {
 			await ctx.reply(`*${reportPd.nama}* sudah melaporkan piketnya hari ini, laporan piket berikutnya untuk hari ini tidak diperlukan lagi`);
 			return;
@@ -86,7 +81,7 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		});
 		await ctx.reply(`*${reportPd.nama}* udah tercatat piket ya, makasih ^_`);
 	} else {
-		const kehadiranToday = pd.kehadiranPiket.filter(x => timeCompareFunc(x.waktu));
+		const kehadiranToday = pd.kehadiranPiket.filter(x => compareTodayDate(x.waktu));
 		if (kehadiranToday.length) {
 			await ctx.reply('Kamu udah melaporkan piket pada hari ini ya, terimakasih :)');
 			return;
