@@ -1,9 +1,12 @@
 import {compareTodayDate} from '@/Utilities/compareTodayDate';
+import {toCapitalCase} from '@/Utilities/toCapitalCase';
 import {toZeroEightNumber} from '@/Utilities/toZeroEightNumber';
 import {prisma} from '@/prisma';
 import {writeFile} from 'fs/promises';
 import {type Context} from 'gampang';
 import path from 'path';
+
+const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
 
 export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) => {
 	const piketProofImage = ctx.image ?? ctx.getReply()?.image;
@@ -12,7 +15,8 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		return;
 	}
 
-	const reportPdName = laporPiketRegex.exec(ctx.text)?.at(1);
+	const reportPdName = ctx.text.match(laporPiketRegex)?.at(1);
+	const currDay = days[new Date().getDay() - 1];
 	const pd = await prisma.pesertaDidik.findFirst({
 		where: {
 			ponsel: toZeroEightNumber(ctx.authorNumber),
@@ -44,6 +48,11 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 
 		if (!reportPd) {
 			await ctx.reply(`Nama *${reportPdName}* tidak ditemukan di kelas *${pd.kelas.kelas}*, coba cek lagi deh namanya`);
+			return;
+		}
+
+		if (reportPd.hariPiket !== currDay) {
+			await ctx.reply(`*${reportPd.nama}* piket dihari ${toCapitalCase(reportPd.hariPiket!)}, bukan hari ini ya`);
 			return;
 		}
 
@@ -84,6 +93,11 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		const kehadiranToday = pd.kehadiranPiket.filter(x => compareTodayDate(x.waktu));
 		if (kehadiranToday.length) {
 			await ctx.reply('Kamu udah melaporkan piket pada hari ini ya, terimakasih :)');
+			return;
+		}
+
+		if (pd.hariPiket !== currDay) {
+			await ctx.reply('Kamu tidak piket hari ini seharusnya, mungkin kamu ingin mengirim laporan piket temanmu? Karena kamu tuh piket di hari ' + toCapitalCase(pd.hariPiket!));
 			return;
 		}
 

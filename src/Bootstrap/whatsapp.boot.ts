@@ -37,7 +37,7 @@ async function bootWhatsappBot() {
 		if (group.waJid) {
 			const membersText = group.members.map((m, i) => `${i + 1}. ${m}`).join('\n');
 			await client.raw?.sendMessage(group.waJid, {
-				text: `Laporan piket hari ini kelas *${group.kelas}*:\n\n${membersText}`,
+				text: `Laporan bertugas piket hari ini kelas *${group.kelas}*:\n\n${membersText}`,
 				contextInfo: {
 					isForwarded: true,
 					externalAdReply: {
