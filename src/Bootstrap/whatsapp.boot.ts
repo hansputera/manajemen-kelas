@@ -15,6 +15,7 @@ import * as path from 'path';
 import {incomingMessage} from '@/Events/incomeMessage';
 import {localComs} from '@/coms';
 import {type GroupedData} from '@/Jobs/conclusionPiketJob';
+import {revealViewOnceSentCommand} from '@/Commands/Normal/revealViewOnce';
 
 async function bootWhatsappBot() {
 	consola.warn('Booting whatsapp bot');
@@ -63,6 +64,7 @@ async function bootWhatsappBot() {
 	cariSiswaCommand(client);
 	registerSiswaCommand(client);
 	triggerConclusionJobCommand(client);
+	revealViewOnceSentCommand(client);
 
 	incomingMessage(client);
 
