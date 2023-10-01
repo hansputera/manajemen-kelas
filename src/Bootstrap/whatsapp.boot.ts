@@ -16,6 +16,7 @@ import {incomingMessage} from '@/Events/incomeMessage';
 import {localComs} from '@/coms';
 import {type GroupedData} from '@/Jobs/conclusionPiketJob';
 import {revealViewOnceSentCommand} from '@/Commands/Normal/revealViewOnce';
+import {prisma} from '@/prisma';
 
 async function bootWhatsappBot() {
 	consola.warn('Booting whatsapp bot');
@@ -36,9 +37,21 @@ async function bootWhatsappBot() {
 
 	localComs.on('conclusionPiket', async (group: GroupedData) => {
 		if (group.waJid) {
+			const tidakBertugas = await prisma.pesertaDidik.findMany({
+				where: {
+					nama: {
+						in: group.members,
+					},
+					kelas: {
+						kelas: group.kelas,
+					},
+					hariPiket: group.hari,
+				},
+			});
 			const membersText = group.members.map((m, i) => `${i + 1}. ${m}`).join('\n');
+			const tidakBertugasText = tidakBertugas.map((m, i) => `${i + 1}. ${m.nama}`).join('\n');
 			await client.raw?.sendMessage(group.waJid, {
-				text: `Laporan bertugas piket hari ini kelas *${group.kelas}*:\n\n${membersText}`,
+				text: `Laporan bertugas piket hari ini kelas *${group.kelas}*:\n\n${membersText}\n\n*Tidak bertugas (denda: Rp.${group.denda * tidakBertugas.length}):*\n${tidakBertugasText}`,
 				contextInfo: {
 					isForwarded: true,
 					externalAdReply: {
