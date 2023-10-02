@@ -77,7 +77,7 @@ export const registerGroupCommand = (bot: Client) => {
 					return;
 				}
 
-				await confirmMessage?.edit('Anda memilih')
+				await confirmMessage?.edit(`Anda memilih ${confirmBool}`);
 			}
 
 			const changeResult = await prisma.kelas.update({

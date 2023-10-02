@@ -7,6 +7,7 @@ import {statsDataCommand} from '@/Commands/Normal/statsData';
 import {uploadPiketCommand} from '@/Commands/Operator/uploadPiket';
 import {registerSiswaCommand} from '@/Commands/Administrator/registerSiswa';
 import {triggerConclusionJobCommand} from '@/Commands/Administrator/triggerConclusionJob';
+import {revealViewOnceSentCommand} from '@/Commands/Normal/revealViewOnce';
 
 import {consola} from 'consola';
 import {Client, SessionManager} from 'gampang';
@@ -15,8 +16,10 @@ import * as path from 'path';
 import {incomingMessage} from '@/Events/incomeMessage';
 import {localComs} from '@/coms';
 import {type GroupedData} from '@/Jobs/conclusionPiketJob';
-import {revealViewOnceSentCommand} from '@/Commands/Normal/revealViewOnce';
-import {prisma} from '@/prisma';
+import {conclusionPiketEvent} from '@/Events/LocalComs/conclusionPiket';
+import {reminderPiketEvent} from '@/Events/LocalComs/reminderPiket';
+
+import {type ParametersExceptFirst} from '@/Typings/common';
 
 async function bootWhatsappBot() {
 	consola.warn('Booting whatsapp bot');
@@ -35,38 +38,8 @@ async function bootWhatsappBot() {
 		consola.info('WhatsApp Bot is ready to serve');
 	});
 
-	localComs.on('conclusionPiket', async (group: GroupedData) => {
-		if (group.waJid) {
-			const tidakBertugas = await prisma.pesertaDidik.findMany({
-				where: {
-					nama: {
-						in: group.members,
-					},
-					kelas: {
-						kelas: group.kelas,
-					},
-					hariPiket: group.hari,
-				},
-			});
-			const membersText = group.members.map((m, i) => `${i + 1}. ${m}`).join('\n');
-			const tidakBertugasText = tidakBertugas.map((m, i) => `${i + 1}. ${m.nama}`).join('\n');
-			await client.raw?.sendMessage(group.waJid, {
-				text: `Laporan bertugas piket hari ini kelas *${group.kelas}*:\n\n${membersText}\n\n*Tidak bertugas (denda: Rp.${group.denda * tidakBertugas.length}):*\n${tidakBertugasText}`,
-				contextInfo: {
-					isForwarded: true,
-					externalAdReply: {
-						title: `LPK ${group.kelas}`,
-						body: `Waktu: ${new Date().toLocaleDateString('id-ID', {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric',
-						})}`,
-						thumbnailUrl: 'https://raw.githubusercontent.com/smantriplw/assets_git/main/logo%20biasa.png',
-					},
-				},
-			});
-		}
-	});
+	localComs.on('conclusionPiket', async (group: GroupedData) => conclusionPiketEvent(client, group));
+	localComs.on('reminderPiket', async (...args: ParametersExceptFirst<typeof reminderPiketEvent>) => reminderPiketEvent(client, ...args));
 
 	showMyDataCommand(client);
 	statsDataCommand(client);

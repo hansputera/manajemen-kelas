@@ -90,5 +90,5 @@ model JadwalPiket {
   hari    String         @unique
   anggota PesertaDidik[]
 
-  Kelas Kelas @relation(fields: [rombel], references: [id])
+  kelas Kelas @relation(fields: [rombel], references: [id])
 }

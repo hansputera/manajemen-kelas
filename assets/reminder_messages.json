@@ -1,0 +1,11 @@
+{
+    "piket": [
+        "Selamat {greet} semuanya, *{class}* pada hari ini yang melaksanakan piket diantaranya ialah:\n\n{members}",
+        "Yo-halo-halo semua, saya cuman ngingetin yang bertugas atau piket hari ini\n\n{members}",
+        "halo ges, cuman mau ngingetin kalau hari ini *{day}*, yang bertugas itu\n{members}"
+    ],
+    "piket_addition": [
+        "Jangan lupa kirim bukti foto piketnya dengan caption *lapor piket* ke japrian gw ya",
+        "Oh-iya, jangan lupa kirim bukti foto piketnya ke japrian gw dengan caption *lapor piket*"
+    ]
+}
