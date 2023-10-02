@@ -41,12 +41,12 @@ export const processPiketExcelFile = async (excelFile: string | Buffer, kelas: s
 				piket: {
 					connectOrCreate: {
 						create: {
-							hari: payloads.slice(3)[index][2],
+							hari: payloads.slice(1)[index][2].toLowerCase(),
 							rombel: s!.rombel,
 						},
 						where: {
 							rombel: s!.rombel,
-							hari: payloads.slice(3)[index][2],
+							hari: payloads.slice(1)[index][2].toLowerCase(),
 						},
 					},
 				},

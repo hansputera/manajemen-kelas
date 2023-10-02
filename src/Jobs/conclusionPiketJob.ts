@@ -38,8 +38,6 @@ export const conclusionPiketJob = cron('0 14 * * *', async () => {
 	});
 
 	if (kehadiranPiketToday.length) {
-		consola.info(`Found ${kehadiranPiketToday.length} kehadiranPiket`);
-
 		const groupedKehadiranByClass = kehadiranPiketToday.reduce<GroupedData[]>((result: GroupedData[], a) => {
 			const existingGroup = result.find(x => x.kelas === a.kelas.kelas);
 			if (existingGroup) {
