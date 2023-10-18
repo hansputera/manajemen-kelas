@@ -55,6 +55,9 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 			},
 			agama: pd.agama_id_str.toLowerCase(),
 			gender: pd.jenis_kelamin,
+			...pd.nomor_telepon_seluler.replace(/\s+/g, '').length ? {
+				ponsel: pd.nomor_telepon_seluler.trim(),
+			} : {},
 		},
 		where: {
 			id: pd.peserta_didik_id,
