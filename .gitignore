@@ -4,3 +4,6 @@ dist
 assets/sessions
 assets/pikets/*.xlsx
 assets/images/*.*
+piket-proof-classifier/**/*.jpeg
+*.h5
+*.keras
