@@ -1,4 +1,5 @@
 import {type GroupedData} from '@/Jobs/conclusionPiketJob';
+import {timeSync} from '@/config';
 import {prisma} from '@/prisma';
 import {type Client} from 'gampang';
 
@@ -23,7 +24,7 @@ export const conclusionPiketEvent = async (client: Client, group: GroupedData) =
 				isForwarded: true,
 				externalAdReply: {
 					title: `LPK ${group.kelas}`,
-					body: `Waktu: ${new Date().toLocaleDateString('id-ID', {
+					body: `Waktu: ${new Date((await timeSync.getTime()).now).toLocaleDateString('id-ID', {
 						year: 'numeric',
 						month: 'long',
 						day: 'numeric',

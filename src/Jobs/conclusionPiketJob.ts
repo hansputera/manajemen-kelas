@@ -1,6 +1,6 @@
 import {localComs} from '@/coms';
+import {timeSync} from '@/config';
 import {prisma} from '@/prisma';
-import {consola} from 'consola';
 import {Cron as cron} from 'croner';
 
 export type GroupedData = {
@@ -12,7 +12,7 @@ export type GroupedData = {
 };
 
 export const conclusionPiketJob = cron('0 14 * * *', async () => {
-	const currentDate = new Date();
+	const currentDate = new Date((await timeSync.getTime()).now);
 	const currDay = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'][
 		currentDate.getDay() - 1
 	];

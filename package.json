@@ -31,6 +31,7 @@
     "gampang": "^2.2.0",
     "hono": "^3.7.2",
     "node-xlsx": "^0.23.0",
+    "ntp-time-sync": "^0.3.1",
     "pretty-bytes": "^5.6.0",
     "zod": "^3.22.2"
   }

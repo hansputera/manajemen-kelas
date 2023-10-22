@@ -32,6 +32,9 @@ dependencies:
   node-xlsx:
     specifier: ^0.23.0
     version: 0.23.0
+  ntp-time-sync:
+    specifier: ^0.3.1
+    version: 0.3.1
   pretty-bytes:
     specifier: ^5.6.0
     version: 5.6.0
@@ -1782,6 +1785,18 @@ packages:
     dependencies:
       path-key: 3.1.1
     dev: true
+
+  /ntp-packet-parser@0.3.1:
+    resolution: {integrity: sha512-bzg5oAy4zNrsyFkGPBNCG2EY63mTFOVdndWpakePs37oSZgaKe+l9HuVGn9oR4IfYcp0d9vYXVPDY36rW8CwTQ==}
+    engines: {node: ^14 || ^16 || ^18}
+    dev: false
+
+  /ntp-time-sync@0.3.1:
+    resolution: {integrity: sha512-j0UBn82TPv7zBmhGdFXX15Gu1YO6Fehf3B+2UHSjhltrGjlvWjmQ4W9bKqGCAkLF+B9tn2014mxc9NaCop+WcQ==}
+    engines: {node: ^14 || ^16 || ^18}
+    dependencies:
+      ntp-packet-parser: 0.3.1
+    dev: false
 
   /object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
