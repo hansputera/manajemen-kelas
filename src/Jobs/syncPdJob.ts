@@ -18,9 +18,9 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 	const results = await Promise.all(pds.map(async pd => prisma.pesertaDidik.upsert({
 		create: {
 			id: pd.peserta_didik_id,
-			nama: pd.nama.replace(/\./g, ''),
+			nama: pd.nama?.replace(/\./g, ''),
 			nisn: pd.nisn,
-			ponsel: pd.nomor_telepon_seluler?.length ? toZeroEightNumber(pd.nomor_telepon_seluler) : undefined,
+			ponsel: pd.nomor_telepon_seluler?.trim().length ? toZeroEightNumber(pd.nomor_telepon_seluler?.trim()) : undefined,
 			kelas: {
 				connectOrCreate: {
 					where: {
@@ -38,7 +38,7 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 		},
 		update: {
 			id: pd.peserta_didik_id,
-			nama: pd.nama.replace(/\./g, ''),
+			nama: pd.nama?.replace(/\./g, ''),
 			nisn: pd.nisn,
 			ponsel: pd.nomor_telepon_seluler,
 			kelas: {
@@ -55,8 +55,8 @@ export const syncPdJob = cron('0 0 * * *', async () => {
 			},
 			agama: pd.agama_id_str.toLowerCase(),
 			gender: pd.jenis_kelamin,
-			...pd.nomor_telepon_seluler.replace(/\s+/g, '').length ? {
-				ponsel: pd.nomor_telepon_seluler.trim(),
+			...pd.nomor_telepon_seluler?.trim().replace(/\s+/g, '').length ? {
+				ponsel: pd.nomor_telepon_seluler?.trim(),
 			} : {},
 		},
 		where: {

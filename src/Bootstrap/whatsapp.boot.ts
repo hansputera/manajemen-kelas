@@ -10,7 +10,7 @@ import {triggerConclusionJobCommand} from '@/Commands/Administrator/triggerConcl
 import {revealViewOnceSentCommand} from '@/Commands/Normal/revealViewOnce';
 
 import {consola} from 'consola';
-import {Client, SessionManager} from 'gampang';
+import {Client, DataStoreKeyValMap, SessionManager} from 'gampang';
 import * as path from 'path';
 
 import {incomingMessage} from '@/Events/incomeMessage';
@@ -32,6 +32,7 @@ async function bootWhatsappBot() {
 			},
 		},
 		prefixes: ['s!', '.'],
+		dataStore: new DataStoreKeyValMap(),
 	});
 
 	client.on('ready', () => {
@@ -54,7 +55,9 @@ async function bootWhatsappBot() {
 
 	incomingMessage(client);
 
-	await client.launch();
+	await client.launch({
+		syncFullHistory: true,
+	});
 }
 
 void bootWhatsappBot();

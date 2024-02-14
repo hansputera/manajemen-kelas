@@ -7,7 +7,7 @@ export const readEnvironmentVariables = <T>(vars: Array<keyof T>): T => {
 		if (key in process.env) {
 			envs[key] = Reflect.get(process.env, key);
 
-			if (!isNaN(parseInt(envs[key] as string, 10))) {
+			if (/^[0-9]+$/g.test(envs[key] as string)) {
 				envs[key] = parseInt(envs[key] as string, 10) as T[keyof T];
 			}
 		} else {

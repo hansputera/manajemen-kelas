@@ -72,10 +72,11 @@ model KehadiranPiket {
   rombel  String
   idSiswa String
 
-  proofPhoto    String // bukti piket
-  ponselPelapor String?
-  keterangan    String? @db.LongText
-  messageId     String
+  proofPhoto     String // bukti piket
+  proofPhotoHash String?
+  ponselPelapor  String?
+  keterangan     String? @db.LongText
+  messageId      String
 
   kelas Kelas        @relation(fields: [rombel], references: [id])
   siswa PesertaDidik @relation(fields: [idSiswa], references: [id])

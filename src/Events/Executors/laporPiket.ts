@@ -4,6 +4,7 @@ import {toZeroEightNumber} from '@/Utilities/toZeroEightNumber';
 import {prisma} from '@/prisma';
 import {writeFile} from 'fs/promises';
 import {type Context} from 'gampang';
+import jimp from 'jimp';
 import path from 'path';
 
 const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
@@ -15,8 +16,13 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		return;
 	}
 
-	const reportPdName = ctx.text.match(laporPiketRegex)?.at(1);
+	const reportPdName = ctx.text.trim().match(laporPiketRegex)?.at(1);
 	const currDay = days[new Date().getDay() - 1];
+
+	if (currDay === 'sabtu' || currDay === 'minggu') {
+		return;
+	}
+
 	const pd = await prisma.pesertaDidik.findFirst({
 		where: {
 			ponsel: toZeroEightNumber(ctx.authorNumber),
@@ -35,7 +41,7 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		const reportPd = await prisma.pesertaDidik.findFirst({
 			where: {
 				nama: {
-					contains: reportPdName.trim(),
+					contains: reportPdName.trim().toLowerCase(),
 				},
 				kelas: {
 					id: pd.rombel,
@@ -63,6 +69,25 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		}
 
 		const bufReportPhoto = await piketProofImage.retrieveFile('image');
+		const jimpImage = await jimp.read(bufReportPhoto);
+
+		const similarImages = (await prisma.kehadiranPiket.findMany({
+			where: {
+				rombel: pd.rombel,
+				proofPhotoHash: {
+					not: null,
+				},
+			},
+			select: {
+				proofPhotoHash: true,
+			},
+		})).filter(x => jimpImage.distanceFromHash(x.proofPhotoHash ?? '') < 0.15);
+		
+		if (similarImages.length) {
+			await ctx.reply(`Gambar ini tidak diterima karena memiliki kesamaan yang hampir sama dengan ${similarImages.length} gambar lainnya yang pernah dikirim, dimohon mengirim gambar yang berbeda ya, upayakan foto dengan angle berbeda`);
+			return;
+		}
+
 		const reportPhotoPath = path.resolve(__dirname, '..', 'assets', 'images', reportPd.id.concat('_', new Date().toISOString(), '.', piketProofImage.mimeType.split('/')[1]));
 		await writeFile(reportPhotoPath, bufReportPhoto);
 
@@ -105,6 +130,7 @@ export const handleLaporPiket = async (ctx: Context, laporPiketRegex: RegExp) =>
 		const reportPhotoPath = path.resolve(__dirname, '..', 'assets', 'images', pd.id.concat('_', new Date().toISOString(), '.', piketProofImage.mimeType.split('/')[1]));
 		await writeFile(reportPhotoPath, bufReportPhoto);
 
+		
 		await prisma.kehadiranPiket.create({
 			data: {
 				kelas: {

@@ -17,6 +17,10 @@ export const conclusionPiketJob = cron('0 14 * * *', async () => {
 		currentDate.getDay() - 1
 	];
 
+	if (currDay === 'sabtu' || currDay === 'minggu') {
+		return;
+	}
+
 	const kehadiranPiketToday = await prisma.kehadiranPiket.findMany({
 		where: {
 			waktu: {
